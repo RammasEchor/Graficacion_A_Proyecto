@@ -39,6 +39,9 @@
     <ClCompile Include="LectorArchivosOBJ.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CuerpoCeleste.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vertice.hpp">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LectorArchivosOBJ.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CuerpoCeleste.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,6 +2,10 @@
 #include "Objeto.hpp"
 #include <iterator>
 
+Objeto::Objeto()
+{
+}
+
 Objeto::Objeto( const Objeto& _objeto )
 {
 	faces = _objeto.faces ;

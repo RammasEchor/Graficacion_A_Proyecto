@@ -168,6 +168,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Objeto.cpp" />
+    <ClCompile Include="CuerpoCeleste.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vertice.cpp" />
   </ItemGroup>
@@ -176,6 +177,7 @@
     <ClInclude Include="Cara.hpp" />
     <ClInclude Include="LectorArchivosOBJ.hpp" />
     <ClInclude Include="Objeto.hpp" />
+    <ClInclude Include="CuerpoCeleste.hpp" />
     <ClInclude Include="Transform.hpp" />
     <ClInclude Include="Vertice.hpp" />
   </ItemGroup>

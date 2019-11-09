@@ -11,6 +11,7 @@ private:
 	
 public:
 	float top ;
+	Objeto();
 	Objeto( std::string _nombre, 
 			std::vector < Face > &&_faces  );
 
