@@ -27,9 +27,6 @@
     <ClCompile Include="Objeto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LectorArchivos.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -37,6 +34,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main_Sistema_Solar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LectorArchivosOBJ.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,10 +53,10 @@
     <ClInclude Include="Objeto.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LectorArchivos.hpp">
+    <ClInclude Include="Transform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.hpp">
+    <ClInclude Include="LectorArchivosOBJ.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

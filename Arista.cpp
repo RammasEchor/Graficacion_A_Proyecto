@@ -3,7 +3,25 @@
 
 Edge::Edge() {}
 
-Edge::Edge( Vertex &&_vi, Vertex &&_vf ) : vi( std::move( _vi ) ), vf( std::move( _vf ) ) {}
+Edge::Edge( const Edge & _arista )
+{
+	vi = _arista.vi ;
+	vf = _arista.vf ;
+}
+
+Edge::Edge( Edge&& _arista ) : vi( std::move( _arista.vi ) ), 
+								vf( std::move( _arista.vf ) )
+{
+}
+
+Edge::Edge( Vertex&& _vi, Vertex&& _vf ) : vi( _vi ), vf( _vf ) {}
+
+Edge& Edge::operator=( const Edge& _arista )
+{
+	vi = _arista.vi ;
+	vf = _arista.vf ;
+	return( *this );
+}
 
 bool Edge::operator==( const Edge &_arista )
 {
@@ -15,10 +33,6 @@ bool Edge::operator==( const Edge &_arista )
 
 	return( false );
 }
-
-Vertex Edge::GetInitialVertex() { return( vi ); }
-
-Vertex Edge::GetFinalVertex() { return( vf ); }
 
 std::ostream & operator<<( std::ostream &_os, const Edge &_T )
 {

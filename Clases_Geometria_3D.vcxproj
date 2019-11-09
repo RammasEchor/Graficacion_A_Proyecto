@@ -160,7 +160,7 @@
   <ItemGroup>
     <ClCompile Include="Arista.cpp" />
     <ClCompile Include="Cara.cpp" />
-    <ClCompile Include="LectorArchivos.cpp" />
+    <ClCompile Include="LectorArchivosOBJ.cpp" />
     <ClCompile Include="main_Display_Object.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -174,7 +174,7 @@
   <ItemGroup>
     <ClInclude Include="Arista.hpp" />
     <ClInclude Include="Cara.hpp" />
-    <ClInclude Include="LectorArchivos.hpp" />
+    <ClInclude Include="LectorArchivosOBJ.hpp" />
     <ClInclude Include="Objeto.hpp" />
     <ClInclude Include="Transform.hpp" />
     <ClInclude Include="Vertice.hpp" />

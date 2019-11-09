@@ -1,5 +1,5 @@
 #pragma once
-#include "LectorArchivos.hpp"
+#include "LectorArchivosOBJ.hpp"
 #include <fstream>
 #include <sstream>
 #include <regex>
@@ -60,7 +60,8 @@ std::vector < Objeto > LectorArchivosOBJ::LeeObjetosArchivo( std::ifstream _arch
 				
 				in >> x >> y >> z ;
 
-				verticesObjetoActual.push_back( std::move( Vertex( x, y, z ) ) );
+				Vertex v( x, y, z );
+				verticesObjetoActual.push_back( std::move( v ) );
 			}
 
 			else if( c == 'f' || c == 'F' )
@@ -113,9 +114,12 @@ Face LectorArchivosOBJ::DameCaraDeCadena( std::string _cadenaConCara )
 	int tamVector = static_cast<int>( vertices.size() );
 	for( int j = 1 ; j < tamVector ; ++j )
 	{	
-		Vertex vi = vertices[j-1] ;
-		Vertex vf = vertices[j] ;
-		aristas.push_back( std::move( Edge( std::move( vi ), std::move( vf ) ) ) );
+		const arma::frowvec v0 = vertices[j-1].get_coords();
+		const arma::frowvec v1 = vertices[j].get_coords();
+		Vertex vi = { v0[0], v0[1], v0[2] };
+		Vertex vf = { v1[0], v1[1], v1[2] };
+		Edge e( std::move( vi ), std::move( vf ) );
+		aristas.push_back( std::move( e ) );
 	}
 
 	aristas.push_back( std::move( Edge( std::move( vertices[vertices.size() - 1] ),

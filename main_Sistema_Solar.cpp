@@ -12,7 +12,7 @@
 #include <windows.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include "LectorArchivos.hpp"
+#include "LectorArchivosOBJ.hpp"
 #include "Transform.hpp"
 
 //Prototipos------------------------------------------
@@ -170,11 +170,8 @@ std::vector < arma::frowvec > TransformaObjeto( Objeto _objeto, arma::fmat _tran
 		std::vector< Vertex > triangle_vertex = cara.GetTriangle();
 		for( int i = 0 ; i < 3 ; ++i )
 		{
-			auto x = triangle_vertex[i].GetCoords()[0];
-			auto y = triangle_vertex[i].GetCoords()[1];
-			auto z = triangle_vertex[i].GetCoords()[2];
-
-			arma::fcolvec v = { { x }, { y }, { z }, 1 };
+			const arma::frowvec vertex = triangle_vertex[i].get_coords();
+			arma::fcolvec v = { { vertex[0] }, { vertex[1] }, { vertex[2] }, 1 };
 			v = _trans * v ;
 
 			vertices_transformados.push_back( arma::frowvec { v[0], v[1], v[2] } );

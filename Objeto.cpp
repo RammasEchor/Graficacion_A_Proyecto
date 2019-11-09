@@ -2,14 +2,18 @@
 #include "Objeto.hpp"
 #include <iterator>
 
+Objeto::Objeto( const Objeto& _objeto )
+{
+	faces = _objeto.faces ;
+	nombre = _objeto.nombre ;
+}
+
 Objeto::Objeto( std::string _nombre, 
 				std::vector < Face > &&_faces )
 	: nombre( _nombre ),  
 	  faces( std::move( _faces ) )
 {
 }
-
-const std::vector < Face >& Objeto::GetFaces() const { return( faces ); }
 
 Vertex Objeto::GetFurthestVertex()
 {
@@ -39,9 +43,9 @@ float Objeto::GetTopDistance()
 	return( v.GetMag() );
 }
 
-std::ostream & operator<<( std::ostream &_os, const Objeto &_T )
+std::ostream& operator<<( std::ostream &_os, const Objeto &_T )
 {
-	_os << "Nombre: " << "\"" << _T.nombre << "\"" << std::endl ;
+	/*_os << "Nombre: " << "\"" << _T.nombre << "\"" << std::endl ;
 
 	int i = 1 ;
 	std::vector < Vertex > vertices( 11 );
@@ -78,22 +82,7 @@ std::ostream & operator<<( std::ostream &_os, const Objeto &_T )
 		_os << "\tFace #" << i << ": " << cara << std::endl ;
 		++i ;
 	}
-
+	*/
 	return( _os );
-}
-
-std::vector< Vertex > Objeto::get_faces_verts()
-{
-	std::vector< Vertex > vertices ;
-	for( Face cara : faces )
-	{
-		for( Edge arista : cara.GetEdges() )
-		{
-			vertices.push_back( arista.GetInitialVertex() );
-			vertices.push_back( arista.GetFinalVertex() );
-		}
-	}
-
-	return( vertices );
 }
 

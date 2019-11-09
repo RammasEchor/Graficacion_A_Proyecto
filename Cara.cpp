@@ -4,18 +4,26 @@
 
 Face::Face() : edges() {}
 
+Face::Face( const Face& _face )
+{
+	edges = _face.edges ;
+}
+
 Face::Face( Face &&_face ) : edges( std::move( _face.edges ) ), indiceVertices( std::move( _face.indiceVertices ) ) {}
 
 Face::Face( std::vector < Edge > &&_edges ) : edges( std::move( _edges ) ) {}
 
-void Face::AgregaArista( Edge _e )
+Face& Face::operator=( const Face& _cara )
+{
+	edges = _cara.edges ;
+	indiceVertices = _cara.indiceVertices ;
+	return( *this );
+}
+
+void Face::AgregaArista( Edge&& _e )
 {
 	edges.push_back( _e );
 }
-
-const std::vector < Edge >& Face::GetEdges()	{ return( edges ); }
-
-const std::vector < int >& Face::GetIndexes()	{ return( indiceVertices ); }
 
 std::vector < Vertex > Face::GetTriangle()
 {
@@ -35,12 +43,13 @@ void Face::AgregaIndices( std::vector < int > _indices )
 
 arma::frowvec Face::GetNormal()
 {
-	Vertex one = edges[0].GetInitialVertex();
-	Vertex two = edges[1].GetInitialVertex();
-	Vertex three = edges[2].GetInitialVertex();
+	
+	const Vertex& one = edges[0].GetInitialVertex();
+	const Vertex& two = edges[1].GetInitialVertex();
+	const Vertex& three = edges[2].GetInitialVertex();
 
-	arma::frowvec normal = arma::cross( two.GetCoords() - one.GetCoords(), 
-										three.GetCoords() - one.GetCoords() );
+	arma::frowvec normal = arma::cross( two.get_coords() - one.get_coords(), 
+										three.get_coords() - one.get_coords() );
 
 	return( normal );
 }

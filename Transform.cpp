@@ -24,7 +24,7 @@ arma::fmat Transform::S(float sx, float sy, float sz) {
 }
 
 arma::fmat Transform::R(float ax, float ay, float az, float angle) {
-    float ang = angle * PI / 180.0f;
+    float ang = (float)(angle * PI / 180.0f);
     arma::fmat Rot;
 
     Rot.eye(4, 4);
