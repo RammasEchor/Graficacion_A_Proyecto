@@ -28,7 +28,7 @@ arma::fmat TransformaPlaneta( arma::fmat _matriz, float _dist_sol,
 
 int main()
 {
-	std::string nombreArchivo = "Modelos/roca.obj" ;
+	std::string nombreArchivo = "roca.obj" ;
 	std::vector < Objeto > objetos = LeeObjetos( nombreArchivo );
 
 	GLFWwindow* window ;
