@@ -1,0 +1,14 @@
+﻿  Arista.cpp
+  Cara.cpp
+  LectorArchivos.cpp
+  Objeto.cpp
+  Transform.cpp
+  Vertice.cpp
+  Generating Code...
+C:\Users\LuisN\Documents\GitHubRepositories\Graficacion_A_Proyecto\Graficacion_A_Proyecto\Transform.cpp(27,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  main_Sistema_Solar.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+C:\Users\LuisN\Documents\GitHubRepositories\Graficacion_A_Proyecto\Graficacion_A_Proyecto\packages\glfw.3.3.0.1\build\native\include\GLFW\glfw3.h(104): message : see previous definition of 'APIENTRY'
+C:\Users\LuisN\Documents\GitHubRepositories\Graficacion_A_Proyecto\Graficacion_A_Proyecto\packages\glfw.3.3.0.1\build\native\include\GLFW\glfw3.h(104): message : WARNING: detected 'min' and/or 'max' macros and undefined them;
+C:\Users\LuisN\Documents\GitHubRepositories\Graficacion_A_Proyecto\Graficacion_A_Proyecto\packages\glfw.3.3.0.1\build\native\include\GLFW\glfw3.h(104): message : WARNING: you may wish to define NOMINMAX before including any windows header
+  Clases_Geometria_3D.vcxproj -> C:\Users\LuisN\Documents\GitHubRepositories\Graficacion_A_Proyecto\Graficacion_A_Proyecto\x64\Debug\Proyecto_Graficacion_A.exe
