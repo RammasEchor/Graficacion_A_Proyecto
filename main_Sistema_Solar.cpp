@@ -3,7 +3,6 @@
 #pragma once
 #include <iterator>
 #include <time.h>
-#include <regex>
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
@@ -14,16 +13,18 @@
 #include <GL/glu.h>
 #include "LectorArchivosOBJ.hpp"
 #include "Transform.hpp"
+#include "CuerpoCeleste.hpp"
 
 //Prototipos------------------------------------------
 GLFWwindow* InicializaGLFW();
 void InicializarCamaraGLFW( GLFWwindow* _window );
 std::vector < Objeto > LeeObjetos( std::string _nombreArchivo );
-std::vector < arma::frowvec > TransformaObjeto( Objeto _objeto, arma::fmat _trans );
-void DibujaObjeto( std::vector < arma::frowvec > _vertices, float _color[] );
+std::vector < arma::frowvec > TransformaObjeto( Objeto& _objeto, arma::fmat _trans );
+void DibujaObjeto( std::vector < arma::frowvec >& _vertices, float _color[] );
 arma::fmat TransformaPlaneta( arma::fmat _matriz, float _dist_sol, 
 								float _grados_trasl, float _grados_tilt, 
 								float _grados_rot );
+void DibujaCuerpoCeleste( CuerpoCeleste& _c );
 //----------------------------------------------------
 
 int main()
@@ -35,38 +36,28 @@ int main()
 	if( ( window = InicializaGLFW()) == nullptr )
 		return( -1 );
 
-	//Todos los planetas apuntan al mismo objeto.
-	Objeto sol = objetos[0] ;
-	Objeto tierra = objetos[0] ;
-
-	arma::frowvec eye = {0.0, 0.0, 10.0};
-    arma::frowvec camera = {0.0, 0.0, 0.0};
-
-	Transform Tr = Transform();
-
-	//Matrices de escalación.
-	float escala_sol = 1.0f ;
-	float escala_tierra = 0.2f ;
-	arma::fmat transf_inicial_sol = Tr.S(escala_sol, escala_sol, escala_sol);
-	arma::fmat transf_inicial_tierra = Tr.S( escala_tierra, escala_tierra, escala_tierra );
-	
-	//Angulos de los planetas y el sol.
-	float angulo_rot_sol = 0.0f ;
-
-    float angulo_rot_tierra = 0.0f ;
-	float angulo_trasl_tierra = 0.0f ;
-	float angulo_tilt_tierra = 23.5f ;
-
 	//Colores
 	float amarillo[] = { 1.0f, 1.0f, 0.0f };
 	float rojo[] = { 1.0f, 0.0f, 0.0f };
 	float azul[] = { 0.0f, 0.0f, 1.0f };
 	float negro[] = { 0.0f, 0.0f, 1.0f };
 
-	do{
-		arma::fmat transf_sol = transf_inicial_sol ;
-		arma::fmat transf_tierra = transf_inicial_tierra ;
+	//Todos los planetas apuntan al mismo objeto.
+	CuerpoCeleste sol( objetos[0], 1.0f, 0.0f, -9.0f, 0.0f, 0.1f, amarillo ); 
+	CuerpoCeleste tierra( objetos[0], 0.2f, -5.5f, 23.5f, 0.1f, 2.5f, azul );
+	CuerpoCeleste marte( objetos[0], 0.106f, -5.5f, 25.0f, 0.2f, 2.5f, rojo );
 
+	std::vector < CuerpoCeleste* > sistema_solar ;
+	sistema_solar.push_back( &sol );
+	sistema_solar.push_back( &tierra );
+	sistema_solar.push_back( &marte );
+
+	arma::frowvec eye = {0.0, 0.0, 10.0};
+    arma::frowvec camera = {0.0, 0.0, 0.0};
+
+	unsigned int num_cuerpos = sistema_solar.size();
+
+	do{
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
 		glMatrixMode(GL_MODELVIEW);
@@ -75,26 +66,12 @@ int main()
                 camera[0], camera[1], camera[2], 
                 0.0, 1.0, 0.0);
 
-		//Actualización de transformaciones
-		//Sol
-		transf_sol = TransformaPlaneta( transf_sol, 0.0f, 0.0f, -9.0f, angulo_rot_sol );
 
-		angulo_rot_sol = (angulo_rot_sol < 360.0f) ? angulo_rot_sol + 0.1f : 0.0f;
-
-		//Tierra
-        transf_tierra = TransformaPlaneta( transf_tierra, -5.5f, angulo_trasl_tierra,
-											angulo_tilt_tierra, angulo_rot_tierra );
-
-		angulo_rot_tierra = (angulo_rot_tierra < 360.0f) ? angulo_rot_tierra + 2.5f : 0.0f;
-		angulo_trasl_tierra = (angulo_trasl_tierra < 360.0f) ? angulo_trasl_tierra + 0.1f : 0.0f;
-
-		//Aplicación de la matriz de transformación.
-		std::vector < arma::frowvec > sol_transformado = TransformaObjeto( sol, transf_sol );
-		std::vector < arma::frowvec > tierra_transformada = TransformaObjeto( tierra, transf_tierra );
-		
-		//Dibujado.
-		DibujaObjeto( sol_transformado, amarillo );
-		DibujaObjeto( tierra_transformada, azul );
+		for( int i = 0 ; i < num_cuerpos ; ++i )
+		{
+			sistema_solar[i]->step();
+			DibujaCuerpoCeleste( *sistema_solar[i] );
+		}
 
 		glfwSwapBuffers(window);
         glfwPollEvents();
@@ -103,28 +80,7 @@ int main()
            glfwWindowShouldClose(window) == 0 );
 }
 
-void InicializarCamaraGLFW( GLFWwindow* _window )
-{
-	glfwMakeContextCurrent(_window);
-    glfwSetInputMode(_window, GLFW_STICKY_KEYS, GL_TRUE);
-	
-	glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	//  Proyecciones
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    int width, height;
-    glfwGetFramebufferSize(_window, &width, &height);
-    float ar = (float)width / height ;
-//  Proyección en paralelo
-    glViewport(0, 0, width, height);
-    glOrtho(-ar, ar, -1.0, 1.0, -20.0, 20.0);
-//  Proyección en perspectiva
-//    glFrustum(-ar, ar, -ar, ar, 2.0, 4.0);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-}
+
 
 GLFWwindow* InicializaGLFW()
 {
@@ -150,6 +106,29 @@ GLFWwindow* InicializaGLFW()
 	return( window );
 }
 
+void InicializarCamaraGLFW( GLFWwindow* _window )
+{
+	glfwMakeContextCurrent(_window);
+    glfwSetInputMode(_window, GLFW_STICKY_KEYS, GL_TRUE);
+	
+	glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	//  Proyecciones
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    int width, height;
+    glfwGetFramebufferSize(_window, &width, &height);
+    float ar = (float)width / height ;
+//  Proyección en paralelo
+    glViewport(0, 0, width, height);
+    glOrtho(-ar, ar, -1.0, 1.0, -20.0, 20.0);
+//  Proyección en perspectiva
+//    glFrustum(-ar, ar, -ar, ar, 2.0, 4.0);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
 std::vector < Objeto > LeeObjetos( std::string _nombreArchivo )
 {
 	clock_t cronometro = clock();
@@ -162,7 +141,7 @@ std::vector < Objeto > LeeObjetos( std::string _nombreArchivo )
 	return( objetos );
 }
 
-std::vector < arma::frowvec > TransformaObjeto( Objeto _objeto, arma::fmat _trans )
+std::vector < arma::frowvec > TransformaObjeto( Objeto& _objeto, arma::fmat _trans )
 {
 	std::vector < arma::frowvec > vertices_transformados ;
 	for( Face cara : _objeto.GetFaces() )
@@ -181,7 +160,7 @@ std::vector < arma::frowvec > TransformaObjeto( Objeto _objeto, arma::fmat _tran
 	return( std::move( vertices_transformados ) );
 }
 
-void DibujaObjeto( std::vector < arma::frowvec > _vertices, float _color[] )
+void DibujaObjeto( std::vector < arma::frowvec >& _vertices, float _color[] )
 {
 	glColor3f( _color[0], _color[1], _color[2] );
 	glBegin(GL_TRIANGLES);
@@ -206,6 +185,12 @@ void DibujaObjeto( std::vector < arma::frowvec > _vertices, float _color[] )
 	glEnd();
 }
 
+void DibujaCuerpoCeleste( CuerpoCeleste& _c )
+{
+	std::vector < arma::frowvec > c_vertex = _c.get_actual_vertex();
+	DibujaObjeto( c_vertex, _c.get_color() );
+}
+
 arma::fmat TransformaPlaneta( arma::fmat _matriz, float _dist_sol, 
 								float _grados_trasl, float _grados_tilt, 
 								float _grados_rot )
@@ -218,5 +203,4 @@ arma::fmat TransformaPlaneta( arma::fmat _matriz, float _dist_sol,
 				Tr.R( 0.0f, 1.0f, 0.0f, _grados_rot );
 
 	return( std::move( res ) );
-
 }
