@@ -24,9 +24,9 @@ CuerpoCeleste::CuerpoCeleste( Objeto _modelo, float _escala, float _dist_cntr,
 std::vector < arma::frowvec > CuerpoCeleste::get_actual_vertex()
 {
 	Transform t ;
-	arma::fmat transf = t.S( escala, escala, escala );
-	transf = transf * t.R( 0.0f, 1.0f, 0.0f, angulo_traslacion ) * 
+	arma::fmat transf = t.R( 0.0f, 1.0f, 0.0f, angulo_traslacion ) * 
 						t.T( distancia_centro, 0.0f, 0.0f ) *
+						t.R( 0.0f, 1.0f, 0.0f, -angulo_traslacion ) *
 						t.R( 0.0f, 0.0f, 1.0f, angulo_tilt ) *
 						t.R( 0.0f, 1.0f, 0.0f, angulo_rotacion );
 
@@ -38,6 +38,7 @@ std::vector < arma::frowvec > CuerpoCeleste::get_actual_vertex()
 		{
 			const arma::frowvec vertex = triangle_vertex[i].get_coords();
 			arma::fcolvec v = { { vertex[0] }, { vertex[1] }, { vertex[2] }, 1 };
+			v = t.S( escala, escala, escala ) * v ;
 			v = transf * v ;
 
 			vertices_transformados.push_back( arma::frowvec { v[0], v[1], v[2] } );

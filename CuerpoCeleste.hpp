@@ -17,7 +17,7 @@ private:
 
 public:
 	CuerpoCeleste( Objeto modelo, float _escala, float _dist_cntr, 
-					float _a_tilt, float _vel_trasl_grados, 
+					float _a_tilt, float _v_trasl_grados, 
 						float _v_rot_grad, float _color[] );
 
 	std::vector < arma::frowvec > get_actual_vertex();

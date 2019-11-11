@@ -40,22 +40,40 @@ int main()
 	float amarillo[] = { 1.0f, 1.0f, 0.0f };
 	float rojo[] = { 1.0f, 0.0f, 0.0f };
 	float azul[] = { 0.0f, 0.0f, 1.0f };
+	float naranja[] = { 0.96f, 0.376f, 0.14f };
+	float lila[] = { 0.611f, 0.517f, 0.552f };
+	float dark_yellow[] = { 0.831f, 0.686f, 0.215f };
 	float negro[] = { 0.0f, 0.0f, 1.0f };
+	float silver[] = { 0.752f, 0.752f, 0.752f };
+	float light_blue[] = { 0.274f, 0.509f, 0.705f };
+	float sky_blue[] = { 0.0f, 0.749f, 1.0f };
 
 	//Todos los planetas apuntan al mismo objeto.
-	CuerpoCeleste sol( objetos[0], 1.0f, 0.0f, -9.0f, 0.0f, 0.1f, amarillo ); 
-	CuerpoCeleste tierra( objetos[0], 0.2f, -5.5f, 23.5f, 0.1f, 2.5f, azul );
-	CuerpoCeleste marte( objetos[0], 0.106f, -5.5f, 25.0f, 0.2f, 2.5f, rojo );
+	CuerpoCeleste sol( objetos[0], 1.0f, 0.0f, -9.0f, 0.0f, 0.1f, amarillo );
+	CuerpoCeleste mercurio( objetos[0], 0.033f, -0.5f, 0.0f, 0.8f, 0.042, naranja );
+	CuerpoCeleste venus( objetos[0], 0.095f, -0.59f, 2.0f, 0.3f, -0.021f, lila );
+	CuerpoCeleste tierra( objetos[0], 0.1f, -0.71f, -23.5f, 0.2f, 2.5f, azul );
+	CuerpoCeleste marte( objetos[0], 0.053f, -0.8f, -25.0f, 0.1f, 2.5f, rojo );
+	CuerpoCeleste jupiter( objetos[0], 0.35f, -1.05f, -3.13f, 0.016f, 6.66f, dark_yellow );
+	CuerpoCeleste saturno( objetos[0], 0.3f, -1.4f, -26.73f, 0.006f, 6.0f, silver );
+	CuerpoCeleste urano( objetos[0], 0.25f, -1.7f, -97.77f, 0.002f, 3.529f, light_blue );
+	CuerpoCeleste neptuno( objetos[0], 0.2f, -2.0f, -28.32f, 0.001f, 3.75f, sky_blue );
 
 	std::vector < CuerpoCeleste* > sistema_solar ;
 	sistema_solar.push_back( &sol );
+	sistema_solar.push_back( &mercurio );
+	sistema_solar.push_back( &venus );
 	sistema_solar.push_back( &tierra );
 	sistema_solar.push_back( &marte );
+	sistema_solar.push_back( &jupiter );
+	sistema_solar.push_back( &saturno );
+	sistema_solar.push_back( &urano );
+	sistema_solar.push_back( &neptuno );
 
 	arma::frowvec eye = {0.0, 0.0, 10.0};
     arma::frowvec camera = {0.0, 0.0, 0.0};
 
-	unsigned int num_cuerpos = sistema_solar.size();
+	size_t num_cuerpos = sistema_solar.size();
 
 	do{
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -65,7 +83,6 @@ int main()
         gluLookAt(eye[0], eye[1], eye[2], 
                 camera[0], camera[1], camera[2], 
                 0.0, 1.0, 0.0);
-
 
 		for( int i = 0 ; i < num_cuerpos ; ++i )
 		{
@@ -93,7 +110,7 @@ GLFWwindow* InicializaGLFW()
         return( nullptr );
     }
 
-	window = glfwCreateWindow(1024, 768, "Objeto 3D", NULL, NULL);
+	window = glfwCreateWindow(2048, 768, "Objeto 3D", NULL, NULL);
     if( window == NULL ) {
         fprintf( stderr, "Fallo al abrir la ventana de GLFW.\n" );
         getchar();
