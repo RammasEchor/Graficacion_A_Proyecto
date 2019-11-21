@@ -15,65 +15,36 @@
 #include "Transform.hpp"
 #include "CuerpoCeleste.hpp"
 
+//Global
+int WIND_WIDTH = 1024 ;
+int WIND_HEIGHT = 384 ;
+
 //Prototipos------------------------------------------
 GLFWwindow* InicializaGLFW();
 void InicializarCamaraGLFW( GLFWwindow* _window );
 std::vector < Objeto > LeeObjetos( std::string _nombreArchivo );
 std::vector < arma::frowvec > TransformaObjeto( Objeto& _objeto, arma::fmat _trans );
 void DibujaObjeto( std::vector < arma::frowvec >& _vertices, float _color[] );
-arma::fmat TransformaPlaneta( arma::fmat _matriz, float _dist_sol, 
-								float _grados_trasl, float _grados_tilt, 
-								float _grados_rot );
-void DibujaCuerpoCeleste( CuerpoCeleste& _c );
+void TeclaPresionada( GLFWwindow* window, int key, int scancode, int action, int mods );
 //----------------------------------------------------
 
 int main()
 {
-	std::string nombreArchivo = "roca.obj" ;
+	std::string nombreArchivo = "player.obj" ;
 	std::vector < Objeto > objetos = LeeObjetos( nombreArchivo );
 
 	GLFWwindow* window ;
 	if( ( window = InicializaGLFW()) == nullptr )
 		return( -1 );
 
-	//Colores
-	float amarillo[] = { 1.0f, 1.0f, 0.0f };
-	float rojo[] = { 1.0f, 0.0f, 0.0f };
-	float azul[] = { 0.0f, 0.0f, 1.0f };
-	float naranja[] = { 0.96f, 0.376f, 0.14f };
-	float lila[] = { 0.611f, 0.517f, 0.552f };
-	float dark_yellow[] = { 0.831f, 0.686f, 0.215f };
-	float negro[] = { 0.0f, 0.0f, 1.0f };
-	float silver[] = { 0.752f, 0.752f, 0.752f };
+	arma::frowvec eye = {0.0, 10.0, 10.0};
+    arma::frowvec camera = {0.0, -10.0, -10.0};
+
 	float light_blue[] = { 0.274f, 0.509f, 0.705f };
-	float sky_blue[] = { 0.0f, 0.749f, 1.0f };
 
-	//Todos los planetas apuntan al mismo objeto.
-	CuerpoCeleste sol( objetos[0], 1.0f, 0.0f, -9.0f, 0.0f, 0.1f, amarillo );
-	CuerpoCeleste mercurio( objetos[0], 0.033f, -0.5f, 0.0f, 0.8f, 0.042, naranja );
-	CuerpoCeleste venus( objetos[0], 0.095f, -0.59f, 2.0f, 0.3f, -0.021f, lila );
-	CuerpoCeleste tierra( objetos[0], 0.1f, -0.71f, -23.5f, 0.2f, 2.5f, azul );
-	CuerpoCeleste marte( objetos[0], 0.053f, -0.8f, -25.0f, 0.1f, 2.5f, rojo );
-	CuerpoCeleste jupiter( objetos[0], 0.35f, -1.05f, -3.13f, 0.016f, 6.66f, dark_yellow );
-	CuerpoCeleste saturno( objetos[0], 0.3f, -1.4f, -26.73f, 0.006f, 6.0f, silver );
-	CuerpoCeleste urano( objetos[0], 0.25f, -1.7f, -97.77f, 0.002f, 3.529f, light_blue );
-	CuerpoCeleste neptuno( objetos[0], 0.2f, -2.0f, -28.32f, 0.001f, 3.75f, sky_blue );
-
-	std::vector < CuerpoCeleste* > sistema_solar ;
-	sistema_solar.push_back( &sol );
-	sistema_solar.push_back( &mercurio );
-	sistema_solar.push_back( &venus );
-	sistema_solar.push_back( &tierra );
-	sistema_solar.push_back( &marte );
-	sistema_solar.push_back( &jupiter );
-	sistema_solar.push_back( &saturno );
-	sistema_solar.push_back( &urano );
-	sistema_solar.push_back( &neptuno );
-
-	arma::frowvec eye = {0.0, 0.0, 10.0};
-    arma::frowvec camera = {0.0, 0.0, 0.0};
-
-	size_t num_cuerpos = sistema_solar.size();
+	Transform t ;
+	arma::fmat trans = t.S( 0.1f, 0.1f, 0.1f ) * t.T( 0.0f, 0.0f, 10.0f );
+	auto vertices = TransformaObjeto( objetos[0], trans );
 
 	do{
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -84,11 +55,7 @@ int main()
                 camera[0], camera[1], camera[2], 
                 0.0, 1.0, 0.0);
 
-		for( int i = 0 ; i < num_cuerpos ; ++i )
-		{
-			sistema_solar[i]->step();
-			DibujaCuerpoCeleste( *sistema_solar[i] );
-		}
+		DibujaObjeto( vertices, light_blue );
 
 		glfwSwapBuffers(window);
         glfwPollEvents();
@@ -96,7 +63,6 @@ int main()
 	}	while( glfwGetKey(window, GLFW_KEY_ESCAPE ) != GLFW_PRESS &&
            glfwWindowShouldClose(window) == 0 );
 }
-
 
 
 GLFWwindow* InicializaGLFW()
@@ -110,7 +76,7 @@ GLFWwindow* InicializaGLFW()
         return( nullptr );
     }
 
-	window = glfwCreateWindow(2048, 768, "Objeto 3D", NULL, NULL);
+	window = glfwCreateWindow(730, 512, "Objeto 3D", NULL, NULL);
     if( window == NULL ) {
         fprintf( stderr, "Fallo al abrir la ventana de GLFW.\n" );
         getchar();
@@ -119,6 +85,7 @@ GLFWwindow* InicializaGLFW()
     }
 
     InicializarCamaraGLFW( window );
+	glfwSetKeyCallback( window, TeclaPresionada );
 
 	return( window );
 }
@@ -202,22 +169,16 @@ void DibujaObjeto( std::vector < arma::frowvec >& _vertices, float _color[] )
 	glEnd();
 }
 
-void DibujaCuerpoCeleste( CuerpoCeleste& _c )
+void TeclaPresionada( GLFWwindow* window, int key, int scancode, int action, int mods )
 {
-	std::vector < arma::frowvec > c_vertex = _c.get_actual_vertex();
-	DibujaObjeto( c_vertex, _c.get_color() );
+	if( key == 262 )	//Right
+		MuevePlayer( action, 1 );
+
+	else if( key == 263 )	//Left
+		MuevePlayer( action, -1 );
 }
 
-arma::fmat TransformaPlaneta( arma::fmat _matriz, float _dist_sol, 
-								float _grados_trasl, float _grados_tilt, 
-								float _grados_rot )
+void MuevePlayer( int _accion_tecla, int _movimiento )
 {
-	Transform Tr ;
-	arma::fmat res = _matriz ;
-	res = res * Tr.R( 0.0f, 1.0f, 0.0f, _grados_trasl ) * 
-				Tr.T( _dist_sol, 0.0f, 0.0f ) *
-				Tr.R( 0.0f, 0.0f, 1.0f, _grados_tilt ) *
-				Tr.R( 0.0f, 1.0f, 0.0f, _grados_rot );
-
-	return( std::move( res ) );
+	
 }

@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <GLFW/glfw3.h>
-#include "LectorArchivos.hpp"
+#include "LectorArchivosOBJ.hpp"
 #include "Transform.hpp"
 
 void DisplayObject( GLFWwindow* window, const std::vector < Objeto >& _objetos );

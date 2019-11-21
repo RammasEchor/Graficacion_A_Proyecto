@@ -42,6 +42,9 @@
     <ClCompile Include="CuerpoCeleste.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main_Disp_Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vertice.hpp">

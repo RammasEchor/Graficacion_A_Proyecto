@@ -164,8 +164,9 @@
     <ClCompile Include="main_Display_Object.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="main_Disp_Player.cpp" />
     <ClCompile Include="main_Sistema_Solar.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Objeto.cpp" />
     <ClCompile Include="CuerpoCeleste.cpp" />

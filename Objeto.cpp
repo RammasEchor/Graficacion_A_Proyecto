@@ -47,6 +47,25 @@ float Objeto::GetTopDistance()
 	return( v.GetMag() );
 }
 
+std::vector < arma::frowvec > Objeto::get_vertex()
+{
+	std::vector< arma::frowvec > vertex ;
+	for( Face cara : faces )
+	{
+		std::vector< Vertex > triangle_vertex = cara.GetTriangle();
+		for( int i = 0 ; i < 3 ; ++i )
+		{
+				vertex.push_back(	
+					arma::frowvec { 
+						triangle_vertex[i].get_coords()[0], 
+						triangle_vertex[i].get_coords()[1],
+						triangle_vertex[i].get_coords()[2] } );
+		}
+	}
+
+	return( std::move( vertex ) );
+}
+
 std::ostream& operator<<( std::ostream &_os, const Objeto &_T )
 {
 	/*_os << "Nombre: " << "\"" << _T.nombre << "\"" << std::endl ;

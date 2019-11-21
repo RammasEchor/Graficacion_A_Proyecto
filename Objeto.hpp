@@ -18,6 +18,7 @@ public:
 	Objeto( const Objeto& _objeto );
 	Objeto& operator=( const Objeto& _objeto ) = default ;
 	const std::vector < Face >& GetFaces() const { return faces ; }
+	std::vector < arma::frowvec > get_vertex();
 	Vertex GetFurthestVertex();
 	float GetTopDistance();
 	friend std::ostream & operator<<( std::ostream &_os, const Objeto &_T );
