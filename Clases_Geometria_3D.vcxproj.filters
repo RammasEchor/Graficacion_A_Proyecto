@@ -30,19 +30,16 @@
     <ClCompile Include="Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main_Display_Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main_Sistema_Solar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LectorArchivosOBJ.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CuerpoCeleste.cpp">
+    <ClCompile Include="main_Proyecto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main_Disp_Player.cpp">
+    <ClCompile Include="Obstaculo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FabricaObstaculos.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,7 +62,10 @@
     <ClInclude Include="LectorArchivosOBJ.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CuerpoCeleste.hpp">
+    <ClInclude Include="Obstaculo.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FabricaObstaculos.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

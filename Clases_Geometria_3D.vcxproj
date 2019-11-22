@@ -112,6 +112,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -160,25 +161,21 @@
   <ItemGroup>
     <ClCompile Include="Arista.cpp" />
     <ClCompile Include="Cara.cpp" />
+    <ClCompile Include="FabricaObstaculos.cpp" />
     <ClCompile Include="LectorArchivosOBJ.cpp" />
-    <ClCompile Include="main_Display_Object.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="main_Disp_Player.cpp" />
-    <ClCompile Include="main_Sistema_Solar.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="main_Proyecto.cpp" />
     <ClCompile Include="Objeto.cpp" />
-    <ClCompile Include="CuerpoCeleste.cpp" />
+    <ClCompile Include="Obstaculo.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vertice.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arista.hpp" />
     <ClInclude Include="Cara.hpp" />
+    <ClInclude Include="FabricaObstaculos.hpp" />
     <ClInclude Include="LectorArchivosOBJ.hpp" />
     <ClInclude Include="Objeto.hpp" />
-    <ClInclude Include="CuerpoCeleste.hpp" />
+    <ClInclude Include="Obstaculo.hpp" />
     <ClInclude Include="Transform.hpp" />
     <ClInclude Include="Vertice.hpp" />
   </ItemGroup>

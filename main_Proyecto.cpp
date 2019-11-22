@@ -13,38 +13,52 @@
 #include <GL/glu.h>
 #include "LectorArchivosOBJ.hpp"
 #include "Transform.hpp"
-#include "CuerpoCeleste.hpp"
+#include "FabricaObstaculos.hpp"
 
-//Global
+//Colores constantes.
+float light_blue[] = { 0.274f, 0.509f, 0.705f };
+float silver[] = { 0.752f, 0.752f, 0.752f };
+
+//Globales.
 int WIND_WIDTH = 1024 ;
 int WIND_HEIGHT = 384 ;
+arma::fcolvec eye = { 0.0f, 10.0f, 10.0f, 1.0f };
+float eye_angle = 0.0f ;
+arma::fcolvec camera = { 0.0f, 0.0f, 0.0f, 1.0f };
+float camera_angle = 0.0f ;
 
 //Prototipos------------------------------------------
 GLFWwindow* InicializaGLFW();
 void InicializarCamaraGLFW( GLFWwindow* _window );
 std::vector < Objeto > LeeObjetos( std::string _nombreArchivo );
 std::vector < arma::frowvec > TransformaObjeto( Objeto& _objeto, arma::fmat _trans );
-void DibujaObjeto( std::vector < arma::frowvec >& _vertices, float _color[] );
+void DibujaObjeto( const std::vector < arma::frowvec >& _vertices, float _color[] );
 void TeclaPresionada( GLFWwindow* window, int key, int scancode, int action, int mods );
+void MuevePlayer( int _accion_tecla, int _movimiento );
+void MueveCamara( int _movimiento );
+void DibujaEjes();
 //----------------------------------------------------
 
 int main()
 {
 	std::string nombreArchivo = "player.obj" ;
 	std::vector < Objeto > objetos = LeeObjetos( nombreArchivo );
+	Objeto player = objetos[0] ;
+
+	nombreArchivo = "cube.obj" ;
+	objetos = LeeObjetos( nombreArchivo );
+	Objeto cubo = objetos[0] ;
 
 	GLFWwindow* window ;
 	if( ( window = InicializaGLFW()) == nullptr )
 		return( -1 );
 
-	arma::frowvec eye = {0.0, 10.0, 10.0};
-    arma::frowvec camera = {0.0, -10.0, -10.0};
-
-	float light_blue[] = { 0.274f, 0.509f, 0.705f };
-
 	Transform t ;
-	arma::fmat trans = t.S( 0.1f, 0.1f, 0.1f ) * t.T( 0.0f, 0.0f, 10.0f );
-	auto vertices = TransformaObjeto( objetos[0], trans );
+	arma::fmat transPlayer = t.S( 0.1f, 0.1f, 0.1f ) * t.T( 0.0f, 0.0f, 10.0f );
+	auto vertPlayer = TransformaObjeto( player, transPlayer );
+
+	FabricaObstaculos f( cubo );
+	arma::fmat dist_mov_obstaculos = t.T( 0.0f, 0.0f, 0.01f );
 
 	do{
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -55,8 +69,16 @@ int main()
                 camera[0], camera[1], camera[2], 
                 0.0, 1.0, 0.0);
 
-		DibujaObjeto( vertices, light_blue );
+		DibujaObjeto( vertPlayer, light_blue );
+		for( Obstaculo obs : f.dame_obstaculos() )
+		{
+			std::vector < arma::frowvec > v = obs.dame_posicion();
+			DibujaObjeto( v, silver );
+		}
 
+		f.avanza( dist_mov_obstaculos );
+
+		DibujaEjes();
 		glfwSwapBuffers(window);
         glfwPollEvents();
 
@@ -144,7 +166,7 @@ std::vector < arma::frowvec > TransformaObjeto( Objeto& _objeto, arma::fmat _tra
 	return( std::move( vertices_transformados ) );
 }
 
-void DibujaObjeto( std::vector < arma::frowvec >& _vertices, float _color[] )
+void DibujaObjeto( const std::vector < arma::frowvec > & _vertices, float _color[] )
 {
 	glColor3f( _color[0], _color[1], _color[2] );
 	glBegin(GL_TRIANGLES);
@@ -171,14 +193,48 @@ void DibujaObjeto( std::vector < arma::frowvec >& _vertices, float _color[] )
 
 void TeclaPresionada( GLFWwindow* window, int key, int scancode, int action, int mods )
 {
-	if( key == 262 )	//Right
-		MuevePlayer( action, 1 );
+	if( action == 1 || action == 2 )
+	{
+		if( key == 262 )	//Right
+			MueveCamara( 1 );
 
-	else if( key == 263 )	//Left
-		MuevePlayer( action, -1 );
+		else if( key == 263 )	//Left
+			MueveCamara( -1 );
+	}
+}
+
+void MueveCamara( int _movimiento )
+{
+	Transform t ;
+	eye_angle = eye_angle + _movimiento > 360.f ? 0.0f : eye_angle + _movimiento ;
+	arma::fmat eye_transf = t.R( 0.0f, 1.0f, 0.0f, eye_angle ) * t.T( 0.0f, 10.0f, 10.0f );
+	eye = eye_transf * arma::fcolvec( { {0}, {0}, {0}, {1} } );
 }
 
 void MuevePlayer( int _accion_tecla, int _movimiento )
 {
-	
+	//Mover al main
+	if( _accion_tecla == 1 )
+	{
+		Transform t ;
+		eye_angle += 5.0f ;
+		arma::fmat eye_transf = t.T( eye[0], eye[1], eye[2] );
+		arma::fcolvec eye_col = { { 0.0 }, { 0.0 }, { 0.0 }, 1 } ;
+		eye_transf = t.R( 0.0f, 1.0f, 0.0f, _movimiento * eye_angle ) * eye_transf ;
+		auto eye_2 = eye_transf * eye_col ;
+	}
 }
+
+void DibujaEjes()
+{
+	glColor3f( 1.0f, 1.0f, 1.0f );
+	glBegin( GL_LINES );
+	glVertex3f( -10.0f, 0.0f , 0.0f );
+	glVertex3f( 10.0f, 0.0f , 0.0f );
+	glVertex3f( 0.0f, -10.0f , 0.0f );
+	glVertex3f( 0.0f, 10.0f , 0.0f );
+	glVertex3f( 0.0f, 0.0f , -10.0f );
+	glVertex3f( 0.0f, 0.0f , 10.0f );
+	glEnd();
+}
+
