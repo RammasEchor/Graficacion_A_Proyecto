@@ -7,6 +7,7 @@ class Face {
 private:
 	std::vector < Edge > edges ;
 	std::vector < int > indiceVertices ;
+	arma::frowvec normalNormalizada ;
 public:
 	Face();
 	Face( const Face & );
@@ -17,6 +18,7 @@ public:
 	const std::vector < Edge >& GetEdges() const { return( edges ); }
 	const std::vector < int >& GetIndexes() const { return( indiceVertices ); }
 	std::vector < Vertex > GetTriangle();
+	void CalculaNormal();
 	arma::frowvec dame_normal_normalizada() const ;
 	void AgregaIndices( std::vector < int > _indices );
 	friend std::ostream & operator<<( std::ostream &_os, const Face &_T );

@@ -7,11 +7,18 @@ Face::Face() : edges() {}
 Face::Face( const Face& _face )
 {
 	edges = _face.edges ;
+	CalculaNormal();
 }
 
-Face::Face( Face &&_face ) : edges( std::move( _face.edges ) ), indiceVertices( std::move( _face.indiceVertices ) ) {}
+Face::Face( Face &&_face ) : edges( std::move( _face.edges ) ), indiceVertices( std::move( _face.indiceVertices ) )
+{
+	CalculaNormal();
+}
 
-Face::Face( std::vector < Edge > &&_edges ) : edges( std::move( _edges ) ) {}
+Face::Face( std::vector < Edge > &&_edges ) : edges( std::move( _edges ) )
+{
+	CalculaNormal();
+}
 
 Face& Face::operator=( const Face& _cara )
 {
@@ -43,6 +50,11 @@ void Face::AgregaIndices( std::vector < int > _indices )
 
 arma::frowvec Face::dame_normal_normalizada() const
 {
+	return( normalNormalizada );
+}
+
+void Face::CalculaNormal()
+{
 	const Vertex& one = edges[0].GetInitialVertex();
 	const Vertex& two = edges[1].GetInitialVertex();
 	const Vertex& three = edges[2].GetInitialVertex();
@@ -55,7 +67,7 @@ arma::frowvec Face::dame_normal_normalizada() const
 	for( int i = 0 ; i < 3 ; ++i )
 		normal[i] = normal[i] / magnitud ;
 
-	return( normal );
+	normalNormalizada = normal ;
 }
 
 std::ostream & operator<<( std::ostream &_os, const Face &_T )
