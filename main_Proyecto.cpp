@@ -14,6 +14,7 @@
 #include "LectorArchivosOBJ.hpp"
 #include "Transform.hpp"
 #include "FabricaObstaculos.hpp"
+#include "Player.hpp"
 
 //Colores constantes.
 float light_blue[] = { 0.274f, 0.509f, 0.705f };
@@ -22,16 +23,17 @@ float silver[] = { 0.752f, 0.752f, 0.752f };
 //Globales.
 int WIND_WIDTH = 1024 ;
 int WIND_HEIGHT = 384 ;
-arma::fcolvec eye = { 0.0f, 10.0f, 10.0f, 1.0f };
+arma::fcolvec eye = { 0.0f, 1.0f, 2.0f, 1.0f };
 float eye_angle = 0.0f ;
-arma::fcolvec camera = { 0.0f, 0.0f, 0.0f, 1.0f };
+arma::fcolvec camera = { 0.0f, 0.0f, -2.0f, 1.0f };
 float camera_angle = 0.0f ;
+Player* player ;
 
 //Prototipos------------------------------------------
 GLFWwindow* InicializaGLFW();
 void InicializarCamaraGLFW( GLFWwindow* _window );
 std::vector < Objeto > LeeObjetos( std::string _nombreArchivo );
-std::vector < arma::frowvec > TransformaObjeto( Objeto& _objeto, arma::fmat _trans );
+std::vector < arma::frowvec > TransformaObjeto( Objeto& _objeto, const arma::fmat& _trans );
 void DibujaObjeto( const std::vector < arma::frowvec >& _vertices, float _color[] );
 void TeclaPresionada( GLFWwindow* window, int key, int scancode, int action, int mods );
 void MuevePlayer( int _accion_tecla, int _movimiento );
@@ -43,7 +45,7 @@ int main()
 {
 	std::string nombreArchivo = "player.obj" ;
 	std::vector < Objeto > objetos = LeeObjetos( nombreArchivo );
-	Objeto player = objetos[0] ;
+	Objeto media_piramide = objetos[0] ;
 
 	nombreArchivo = "cube.obj" ;
 	objetos = LeeObjetos( nombreArchivo );
@@ -53,12 +55,12 @@ int main()
 	if( ( window = InicializaGLFW()) == nullptr )
 		return( -1 );
 
-	Transform t ;
-	arma::fmat transPlayer = t.S( 0.1f, 0.1f, 0.1f ) * t.T( 0.0f, 0.0f, 10.0f );
-	auto vertPlayer = TransformaObjeto( player, transPlayer );
-
+	Player temp_p( media_piramide );
+	player = &temp_p ;
 	FabricaObstaculos f( cubo );
-	arma::fmat dist_mov_obstaculos = t.T( 0.0f, 0.0f, 0.01f );
+
+	Transform t ;
+	arma::fmat dist_mov_obstaculos = t.T( 0.0f, 0.0f, 0.1f );
 
 	do{
 		glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -69,7 +71,7 @@ int main()
                 camera[0], camera[1], camera[2], 
                 0.0, 1.0, 0.0);
 
-		DibujaObjeto( vertPlayer, light_blue );
+		DibujaObjeto( player->dame_posicion(), light_blue );
 		for( Obstaculo obs : f.dame_obstaculos() )
 		{
 			std::vector < arma::frowvec > v = obs.dame_posicion();
@@ -127,10 +129,10 @@ void InicializarCamaraGLFW( GLFWwindow* _window )
     glfwGetFramebufferSize(_window, &width, &height);
     float ar = (float)width / height ;
 //  Proyección en paralelo
-    glViewport(0, 0, width, height);
-    glOrtho(-ar, ar, -1.0, 1.0, -20.0, 20.0);
+    /*glViewport(0, 0, width, height);
+    glOrtho(-ar, ar, -1.0, 1.0, -20.0, 20.0);*/
 //  Proyección en perspectiva
-//    glFrustum(-ar, ar, -ar, ar, 2.0, 4.0);
+	glFrustum(-ar, ar, -ar, ar, 1.0, 5.0);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
@@ -147,7 +149,7 @@ std::vector < Objeto > LeeObjetos( std::string _nombreArchivo )
 	return( objetos );
 }
 
-std::vector < arma::frowvec > TransformaObjeto( Objeto& _objeto, arma::fmat _trans )
+std::vector < arma::frowvec > TransformaObjeto( Objeto& _objeto, const arma::fmat& _trans )
 {
 	std::vector < arma::frowvec > vertices_transformados ;
 	for( Face cara : _objeto.GetFaces() )
@@ -196,10 +198,10 @@ void TeclaPresionada( GLFWwindow* window, int key, int scancode, int action, int
 	if( action == 1 || action == 2 )
 	{
 		if( key == 262 )	//Right
-			MueveCamara( 1 );
+			player->ladea( 1 );
 
 		else if( key == 263 )	//Left
-			MueveCamara( -1 );
+			player->ladea( -1 );
 	}
 }
 
@@ -229,12 +231,14 @@ void DibujaEjes()
 {
 	glColor3f( 1.0f, 1.0f, 1.0f );
 	glBegin( GL_LINES );
-	glVertex3f( -10.0f, 0.0f , 0.0f );
+	glVertex3f( -10.0f, 0.0f , -2.9f );
+	glVertex3f( 10.0f, 0.0f , -2.9f );
+	/*glVertex3f( -10.0f, 0.0f , 0.0f );
 	glVertex3f( 10.0f, 0.0f , 0.0f );
 	glVertex3f( 0.0f, -10.0f , 0.0f );
 	glVertex3f( 0.0f, 10.0f , 0.0f );
 	glVertex3f( 0.0f, 0.0f , -10.0f );
-	glVertex3f( 0.0f, 0.0f , 10.0f );
+	glVertex3f( 0.0f, 0.0f , 10.0f );*/
 	glEnd();
 }
 

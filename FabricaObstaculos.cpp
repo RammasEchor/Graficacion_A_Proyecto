@@ -5,6 +5,9 @@
 #include "FabricaObstaculos.hpp"
 #include "Transform.hpp"
 
+#define SPAN_OBSTACLE_WIDTH 20
+#define OFFSET_RAND (float)SPAN_OBSTACLE_WIDTH / 2 
+
 FabricaObstaculos::FabricaObstaculos( Objeto &_modelo )
 {
 	modelo = &_modelo ;
@@ -16,7 +19,7 @@ FabricaObstaculos::FabricaObstaculos( Objeto &_modelo )
 	for( int i = 0 ; i < 9 ; ++i )
 	{
 		Obstaculo obs( *modelo );
-		arma::fmat initial_obs_mat = initial_mat * t.T( rand() % 10 - 5.0f, 0.0f, 0.0f - (i * 3) );
+		arma::fmat initial_obs_mat = initial_mat * t.T( rand() % SPAN_OBSTACLE_WIDTH - OFFSET_RAND, 0.0f, 0.0f - (i * 3) );
 		obs.establece_posicion_inicial( std::move( initial_obs_mat ) );
 		obstaculos.push_back( std::move( obs ) );
 	}
@@ -39,7 +42,7 @@ void FabricaObstaculos::avanza( arma::fmat &_dist )
 	{
 		obstaculos.erase( obstaculos.begin() );
 		Obstaculo obs( *modelo );
-		arma::fmat initial_obs_mat = t.S( 0.15f, 0.15f, 0.15f ) * t.T( rand() % 10 - 5.0f, 0.0f, -15.0f );
+		arma::fmat initial_obs_mat = t.S( 0.15f, 0.15f, 0.15f ) * t.T( rand() % SPAN_OBSTACLE_WIDTH - OFFSET_RAND, 0.0f, -15.0f );
 		obs.establece_posicion_inicial( std::move( initial_obs_mat ) );
 		obstaculos.push_back( std::move( obs ) );
 	}

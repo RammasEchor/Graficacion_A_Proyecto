@@ -17,7 +17,7 @@ public:
 	const std::vector < Edge >& GetEdges() const { return( edges ); }
 	const std::vector < int >& GetIndexes() const { return( indiceVertices ); }
 	std::vector < Vertex > GetTriangle();
-	arma::frowvec GetNormal();
+	arma::frowvec dame_normal_normalizada() const ;
 	void AgregaIndices( std::vector < int > _indices );
 	friend std::ostream & operator<<( std::ostream &_os, const Face &_T );
 };

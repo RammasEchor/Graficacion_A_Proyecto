@@ -41,15 +41,19 @@ void Face::AgregaIndices( std::vector < int > _indices )
 	indiceVertices.push_back( _indices[2] );
 }
 
-arma::frowvec Face::GetNormal()
+arma::frowvec Face::dame_normal_normalizada() const
 {
-	
 	const Vertex& one = edges[0].GetInitialVertex();
 	const Vertex& two = edges[1].GetInitialVertex();
 	const Vertex& three = edges[2].GetInitialVertex();
 
 	arma::frowvec normal = arma::cross( two.get_coords() - one.get_coords(), 
 										three.get_coords() - one.get_coords() );
+
+	float magnitud = sqrtf( powf( normal[0], 2 ) + powf( normal[1], 2 ) + powf( normal[2], 2 ) );
+
+	for( int i = 0 ; i < 3 ; ++i )
+		normal[i] = normal[i] / magnitud ;
 
 	return( normal );
 }

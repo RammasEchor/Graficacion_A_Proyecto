@@ -163,9 +163,13 @@
     <ClCompile Include="Cara.cpp" />
     <ClCompile Include="FabricaObstaculos.cpp" />
     <ClCompile Include="LectorArchivosOBJ.cpp" />
-    <ClCompile Include="main_Proyecto.cpp" />
+    <ClCompile Include="main_Proyecto.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="main_Tarea_Iluminacion.cpp" />
     <ClCompile Include="Objeto.cpp" />
     <ClCompile Include="Obstaculo.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vertice.cpp" />
   </ItemGroup>
@@ -176,6 +180,7 @@
     <ClInclude Include="LectorArchivosOBJ.hpp" />
     <ClInclude Include="Objeto.hpp" />
     <ClInclude Include="Obstaculo.hpp" />
+    <ClInclude Include="Player.hpp" />
     <ClInclude Include="Transform.hpp" />
     <ClInclude Include="Vertice.hpp" />
   </ItemGroup>

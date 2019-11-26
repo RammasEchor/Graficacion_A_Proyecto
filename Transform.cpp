@@ -48,3 +48,27 @@ arma::fmat Transform::R(float ax, float ay, float az, float angle) {
     return(Rot);
 }
 
+arma::fmat Transform::Rrad(float ax, float ay, float az, float _rad_angle) {
+    arma::fmat Rot;
+
+    Rot.eye(4, 4);
+    
+    if (ax)
+        Rot = arma::fmat( {{1.0f, 0.0f, 0.0f, 0.0f},
+                        {0.0f, cosf(_rad_angle), -sinf(_rad_angle), 0.0f},
+                        {0.0f, sinf(_rad_angle), cosf(_rad_angle), 0.0f},
+                        {0.0f, 0.0f, 0.0f, 1.0}} );
+    if (ay)
+        Rot = arma::fmat( {{cosf(_rad_angle), 0.0f, sinf(_rad_angle), 0.0f},
+                        {0.0f, 1.0f, 0.0f, 0.0f},
+                        {-sinf(_rad_angle), 0.0, cosf(_rad_angle), 0.0f},
+                        {0.0f, 0.0f, 0.0f, 1.0}} );
+    if (az)
+        Rot = arma::fmat( {{cosf(_rad_angle), -sinf(_rad_angle), 0.0f, 0.0f},
+                        {sinf(_rad_angle), cosf(_rad_angle), 0.0f, 0.0f},
+                        {0.0f, 0.0f, 1.0f, 0.0f},
+                        {0.0f, 0.0f, 0.0f, 1.0}} );
+    
+    return(Rot);
+}
+
