@@ -86,6 +86,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Users\LuisN\Documents\GitHubRepositories\Graficacion_A_Proyecto\Graficacion_A_Proyecto\packages\glfw.3.3.0.1\build\native\include;C:\Users\LuisN\Documents\GitHubRepositories\Graficacion_A_Proyecto\Graficacion_A_Proyecto\packages\armadillo-code-only.9.100.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\LuisN\Documents\GitHubRepositories\Graficacion_A_Proyecto\Graficacion_A_Proyecto\packages\glfw.3.3.0.1\build\native\lib\static\v142\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -156,6 +158,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glu32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -163,10 +166,10 @@
     <ClCompile Include="Cara.cpp" />
     <ClCompile Include="FabricaObstaculos.cpp" />
     <ClCompile Include="LectorArchivosOBJ.cpp" />
+    <ClCompile Include="main_Examen.cpp" />
     <ClCompile Include="main_Proyecto.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="main_Tarea_Iluminacion.cpp" />
     <ClCompile Include="Objeto.cpp" />
     <ClCompile Include="Obstaculo.cpp" />
     <ClCompile Include="Player.cpp" />

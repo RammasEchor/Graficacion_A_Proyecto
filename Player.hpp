@@ -15,4 +15,5 @@ class Player
 		Player( Objeto& _modelo );
 		void ladea( int _direccion );
 		std::vector< arma::frowvec > dame_posicion();
+		std::vector < Face > dame_caras_transf();
 };

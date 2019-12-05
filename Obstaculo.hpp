@@ -12,4 +12,5 @@ class Obstaculo	{
 		void establece_posicion_inicial( arma::fmat &&_mat_ini );
 		void avanza( const arma::fmat &_dist );
 		std::vector < arma::frowvec > dame_posicion();
+		std::vector < Face > dame_caras_transf();
 };

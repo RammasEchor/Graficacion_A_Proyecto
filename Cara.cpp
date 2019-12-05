@@ -32,7 +32,7 @@ void Face::AgregaArista( Edge&& _e )
 	edges.push_back( _e );
 }
 
-std::vector < Vertex > Face::GetTriangle()
+std::vector < Vertex > Face::GetTriangle() const
 {
 	std::vector < Vertex > vertex ;
 	vertex.push_back( edges[0].GetInitialVertex() );

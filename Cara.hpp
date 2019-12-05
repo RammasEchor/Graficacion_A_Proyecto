@@ -17,7 +17,7 @@ public:
 	void AgregaArista( Edge&& _e );
 	const std::vector < Edge >& GetEdges() const { return( edges ); }
 	const std::vector < int >& GetIndexes() const { return( indiceVertices ); }
-	std::vector < Vertex > GetTriangle();
+	std::vector < Vertex > GetTriangle() const ;
 	void CalculaNormal();
 	arma::frowvec dame_normal_normalizada() const ;
 	void AgregaIndices( std::vector < int > _indices );

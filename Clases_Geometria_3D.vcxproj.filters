@@ -45,7 +45,7 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main_Tarea_Iluminacion.cpp">
+    <ClCompile Include="main_Examen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
